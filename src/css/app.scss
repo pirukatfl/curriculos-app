@@ -1,0 +1,48 @@
+// app global css in SCSS form
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;400;700;900&family=Ubuntu:wght@300;400;700&display=swap");
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Ubuntu", sans-serif;
+  font-size: 62.5%;
+  overflow: hidden;
+
+  ::-webkit-scrollbar {
+    width: 10px;
+    background-color: #fff;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #ebebeb;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: rgb(10, 129, 197); /* color of the scroll thumb */
+    border-radius: 4px; /* roundness of the scroll thumb */
+  }
+}
+
+// FORMS
+form {
+  height: auto;
+  width: 100%;
+  padding: 0 15px;
+  // display: flex;
+  // justify-content: flex-start;
+  // flex-wrap: wrap;
+}
+
+hr {
+  margin: 15px 0;
+  border-color: rgba($color: #d4d4d4, $alpha: 0.3);
+}
+
+.buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 15px;
+}
