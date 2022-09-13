@@ -1,10 +1,16 @@
 <template>
-  <div class="input">
-    {{ image_url }}
+  <div class="input" id="input-file">
     <keep-alive>
-      <div class="photo-profile" :key="componentKey">
+      <div
+        class="photo-profile"
+        :style="{
+          backgroundImage: `url(${image_url})`,
+          backgroundSize: 'cover',
+          backgroundRepeat: 'no-repeat',
+          backgroundPosition: 'center center',
+        }"
+      >
         <img v-if="!image_url" :src="require('./../../assets/no-photo.png')" />
-        <img v-else :src="image_url" />
       </div>
     </keep-alive>
     <div class="input-file">
@@ -32,7 +38,6 @@ export default {
   data() {
     return {
       image_url: "",
-      componentKey: 0,
     };
   },
   props: {
@@ -52,11 +57,9 @@ export default {
         const {
           data: { data: data },
         } = await api.get(`image/${this.userId}`);
-        console.log(data);
         if (data) {
           this.image_url = data.image_url;
         }
-        this.this.componentKey += 1;
       } catch (error) {
         console.log(error);
       }
@@ -76,7 +79,7 @@ export default {
           },
         };
         await api.post("image", formData, config);
-        await this.getData();
+        this.$emit("save");
       } catch (error) {
         console.log(error);
       }
@@ -98,6 +101,7 @@ export default {
   position: relative;
   margin: 15px 0;
   max-width: 360px;
+  max-height: 360px;
   input[type="file"] {
     display: none;
 
@@ -123,10 +127,11 @@ export default {
   }
 
   .photo-profile {
-    padding: 40px;
-    border-radius: 50%;
+    padding: 5px;
+    border-radius: 5%;
     margin-bottom: 10px;
     width: 150px;
+    height: 150px;
     border: 1px solid rgba($color: #91919167, $alpha: 0.5);
 
     img {
@@ -145,5 +150,10 @@ export default {
   &:hover {
     background-color: rgba(10, 129, 197, 1);
   }
+}
+
+.image-profile {
+  width: 300px;
+  height: 300px;
 }
 </style>

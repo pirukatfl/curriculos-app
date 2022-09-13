@@ -4,8 +4,9 @@
       <label class="move">{{ label }}</label>
       <input
         type="checkbox"
-        @change="$emit('onInput', check)"
-        v-model="check"
+        @change="$emit('onInput', selected)"
+        :value="value"
+        v-model="selected"
       />
     </div>
     <div v-if="msgAttention" class="msg-attention">
@@ -15,24 +16,20 @@
 </template>
 <script>
 export default {
-  name: "GenericCheckbox",
+  name: "GenericCheckboxGroup",
   date() {
     return {
-      check: false,
+      selected: [],
     };
   },
   props: {
     msgAttention: String,
     label: String,
-    value: [String, Number, Boolean],
+    value: [Boolean, Number, String],
+    selecteds: [Array],
   },
   created() {
-    this.check = this.value;
-  },
-  watch: {
-    value() {
-      this.check = this.value;
-    },
+    this.selected = this.selecteds;
   },
 };
 </script>
@@ -43,6 +40,7 @@ export default {
   font-size: 0.8rem;
   position: relative;
   max-width: 360px;
+
   input {
     cursor: pointer;
     margin-left: 5px;

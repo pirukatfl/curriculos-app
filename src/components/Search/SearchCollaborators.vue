@@ -16,34 +16,69 @@
       <div class="text">Filtre seus candidatos</div>
     </div>
     <form>
-      <!-- <GenericSelect
-        label="Selecione o nível da escolaridade"
-        :value="form.level_education"
-        :options="educationLevels"
-        @onInput="form.level_education = $event"
-      /> -->
+      <GenericInput
+        label="Nome completo"
+        type="text"
+        placeholder="Informe seu nome completo"
+        :value="filter.name.value"
+        @onInput="filter.name.value = $event"
+      />
+      <GenericSelect
+        label="Selecione o cargo"
+        :value="filter.office.value"
+        :options="positions"
+        @onInput="filter.office.value = $event"
+      />
+      <GenericSelect
+        label="Selecione o curso"
+        :value="filter.course_name.value"
+        :options="courses"
+        @onInput="filter.course_name.value = $event"
+      />
+      <GenericInput
+        label="Tempo de experiência"
+        type="number"
+        placeholder="Informe o tempo de experiência"
+        :value="filter.working_time_on_job.value"
+        @onInput="filter.working_time_on_job.value = $event"
+      />
       <div class="buttons">
-        <GenericButton :text="'Filtrar'" :type="'submit'" :onClick="() => {}" />
+        <GenericButton :text="'Filtrar'" :type="'submit'" :onClick="search" />
       </div>
     </form>
   </div>
 </template>
 <script>
 import GenericButton from "src/components/Buttons/GenericiButton.vue";
-// import GenericSelect from "src/components/Inputs/GenericSelect.vue";
+import GenericSelect from "src/components/Inputs/GenericSelect.vue";
+import GenericInput from "src/components/Inputs/GenericInput.vue";
 // import GenericTable from "@/components/Table/Generictable";
 import { educationLevels } from "src/helpers/eduactionLevels";
+import { positions } from "src/helpers/positions";
 
 export default {
   name: "SearchCollaborators",
   data() {
     return {
+      positions: positions,
       educationLevels: educationLevels,
       filter: {
-        name: "",
-        course_name: "",
-        office: "",
-        working_time_on_job: "",
+        name: {
+          value: "",
+          error: "",
+        },
+        course_name: {
+          value: "",
+          error: "",
+        },
+        office: {
+          value: "",
+          error: "",
+        },
+        working_time_on_job: {
+          value: "",
+          error: "",
+        },
       },
     };
   },
@@ -52,10 +87,20 @@ export default {
       type: Boolean,
       default: false,
     },
+    courses: {
+      type: Array,
+      default: () => [],
+    },
   },
   components: {
     GenericButton,
-    // GenericSelect,
+    GenericSelect,
+    GenericInput,
+  },
+  methods: {
+    search() {
+      this.$emit("search", this.filter);
+    },
   },
 };
 </script>
@@ -63,11 +108,12 @@ export default {
 .header-search {
   display: flex;
   height: 30px;
-  padding: 0 15px;
+  padding: 0 30px 0 15px;
   align-items: center;
   justify-content: space-between;
   border-radius: 4px 4px 0 0;
   border-bottom: 1px solid rgba($color: #4a63ec, $alpha: 0.3);
+  margin-bottom: 10px;
 
   .close {
     cursor: pointer;
@@ -88,13 +134,13 @@ export default {
 }
 .collaborators-filter {
   width: 0px;
-  height: 100%;
+  height: 100vh;
   background-color: #fff;
-  margin-right: -15px;
   transition: transform width 0.2s ease-in-out;
+  border-left: 1px solid rgb(10, 129, 197);
+  border-right: 1px solid transparent;
   &.open {
     margin-left: 5px;
-    border-radius: 4px 0 0 4px;
     width: 380px;
   }
 }
@@ -124,5 +170,8 @@ export default {
   padding: 15px;
   height: 100vh;
   background-color: rgba($color: #4a63ec, $alpha: 0.3);
+}
+.buttons {
+  margin: 0 5px;
 }
 </style>

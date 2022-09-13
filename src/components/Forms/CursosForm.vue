@@ -167,7 +167,6 @@ export default {
       }
     },
     newCourse() {
-      console.log("AKI");
       this.form.push({
         id: {
           value: null,

@@ -36,12 +36,13 @@ export default {
   margin: 10px 5px;
   width: 100%;
   textarea {
-    width: 100%;
+    width: 97%;
     outline: none;
     border: 1px solid transparent;
     background-color: rgba($color: #91919167, $alpha: 0.5);
     padding: 5px;
     border-radius: 4px;
+    resize: none;
   }
 
   .info {

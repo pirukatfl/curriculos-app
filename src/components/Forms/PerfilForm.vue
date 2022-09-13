@@ -6,9 +6,11 @@
         placeholder="Escolha sua melhor foto"
         :userId="this.infoUser.user.id"
         :userEmail="this.infoUser.user.email"
+        @save="saveWithFile"
+        :key="fileKey"
       />
       <GenericInput
-        label="Nome Completo"
+        label="Nome completo"
         type="text"
         placeholder="Informe seu nome completo"
         :value="form.name.value"
@@ -35,13 +37,13 @@
         :options="genders"
         @onInput="form.gender.value = $event"
       />
-      <GenericInput
+      <!-- <GenericInput
         label="Cpf/Cnpj"
         type="text"
         placeholder="Informe seu Cpf/Cnpj"
         :value="form.cpf_cnpj.value"
         @onInput="form.cpf_cnpj.value = $event"
-      />
+      /> -->
       <TextArea
         label="Conte Um Pouco Sobre Você"
         placeholder="..."
@@ -79,6 +81,7 @@ export default {
       infoUser: jwt.decode(JSON.parse(window.localStorage.getItem("infoUser"))),
       genders: genders,
       file: "",
+      fileKey: 0,
       form: {
         name: {
           value: "",
@@ -100,10 +103,10 @@ export default {
           value: "",
           error: "",
         },
-        cpf_cnpj: {
-          value: "",
-          error: "",
-        },
+        // cpf_cnpj: {
+        //   value: "",
+        //   error: "",
+        // },
       },
     };
   },
@@ -130,7 +133,7 @@ export default {
           this.form.gender.value = data.gender || "";
           this.form.year.value = data.year || "";
           this.form.birth_date.value = data.birth_date || "";
-          this.form.cpf_cnpj.value = data.cpf_cnpj || "";
+          // this.form.cpf_cnpj.value = data.cpf_cnpj || "";
         }
       } catch (error) {}
     },
@@ -143,12 +146,16 @@ export default {
           gender: this.form.gender.value,
           year: this.form.year.value,
           birth_date: this.form.birth_date.value,
-          cpf_cnpj: this.form.cpf_cnpj.value,
+          // cpf_cnpj: this.form.cpf_cnpj.value,
         };
-        const { data: data } = await api.post("profiles", body);
+        await api.post("profiles", body);
       } catch (error) {
         console.error(error);
       }
+    },
+    async saveWithFile() {
+      await this.save();
+      location.reload();
     },
   },
 };

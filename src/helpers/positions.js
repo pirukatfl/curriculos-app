@@ -1,5 +1,5 @@
 export const positions = [
-  "selecione",
+  "",
   "abastecedor de linha de produção",
   "abastecedor de máquinas",
   "acabador de embalagens",

@@ -25,6 +25,15 @@
             @onInput="form.password.value = $event"
             @clearError="form.password.error = $event"
           />
+          <GenericInput
+            label="Repita sua senha"
+            type="password"
+            :value="form.repassword.value"
+            :error="form.repassword.error"
+            placeholder="Informe sua senha"
+            @onInput="form.repassword.value = $event"
+            @clearError="form.repassword.error = $event"
+          />
           <div>
             <GenericCheckbox
               :label="'cadastro para empresa?'"
@@ -66,6 +75,7 @@ const modalInfo = modalInfoStore();
 const form = reactive({
   login: { value: "", error: "" },
   password: { value: "", error: "" },
+  repassword: { value: "", error: "" },
 });
 
 let isCnpj = ref(false);
@@ -87,19 +97,22 @@ function validForm() {
 }
 async function register() {
   try {
-    const permission = isCnpj.value ? 2 : 3;
-    const { data: data } = await api.post("auth/register", {
-      email: form.login.value,
-      password: form.password.value,
-      permission_id: permission,
-    });
-    if (data) {
-      modalInfo.modalInfoAction({
-        ...modalInfo.modalInfo,
-        show: true,
-        success: true,
-        message: "Cadastro efetuado com sucesso!",
+    const validate = validateSamePassword();
+    if (validate) {
+      const permission = isCnpj.value ? 2 : 3;
+      const { data: data } = await api.post("auth/register", {
+        email: form.login.value,
+        password: form.password.value,
+        permission_id: permission,
       });
+      if (data) {
+        modalInfo.modalInfoAction({
+          ...modalInfo.modalInfo,
+          show: true,
+          success: true,
+          message: "Cadastro efetuado com sucesso!",
+        });
+      }
     }
   } catch (error) {
     modalInfo.modalInfoAction({
@@ -110,6 +123,13 @@ async function register() {
     });
   } finally {
   }
+}
+function validateSamePassword() {
+  if (form.password.value !== form.repassword.value) {
+    form.repassword.error = "As senhas estão diferentes!";
+    return false;
+  }
+  return true;
 }
 function resetForm() {
   for (let propriedade in form) {

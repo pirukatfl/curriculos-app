@@ -142,6 +142,10 @@ export default {
                 value: experience.office_description || "",
                 error: "",
               },
+              working_time_on_job: {
+                value: experience.working_time_on_job || null,
+                error: "",
+              },
             });
           }
         } else {
@@ -161,6 +165,10 @@ export default {
             current_job: false || item.current_job.value,
             office: item.office.value,
             office_description: item.office_description.value,
+            working_time_on_job: this.calculateTimeInJob(
+              item.date_in.value,
+              item.date_out.value
+            ),
           };
         });
         const body = {
@@ -170,6 +178,21 @@ export default {
       } catch (error) {
         console.log(error);
       }
+    },
+    calculateTimeInJob(dateIn, dateOut) {
+      const dateInitial = new Date(dateIn);
+      const dateFinal = new Date(dateOut);
+      const diffTime = Math.abs(dateFinal - dateInitial);
+      console.log("milliseconds", diffTime);
+      console.log(dateIn);
+      console.log(dateOut);
+
+      // const date1 = new Date('7/13/2010');
+      // const date2 = new Date('12/15/2010');
+      // const diffTime = Math.abs(date2 - date1);
+      // const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+      // console.log(diffTime + " milliseconds");
+      // console.log(diffDays + " days");
     },
     async deleteExperience(index) {
       if (this.form[index].id) {

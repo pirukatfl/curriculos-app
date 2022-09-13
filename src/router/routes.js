@@ -18,6 +18,10 @@ const routes = [
     path: "/search-collaborators",
     component: () => import("src/pages/LookingForCollaborators.vue"),
   },
+  {
+    path: "/search-collaborators/:id",
+    component: () => import("src/pages/SeeCollaborator"),
+  },
 
   // Always leave this as last one,
   // but you can also remove it
