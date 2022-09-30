@@ -19,7 +19,7 @@
       <GenericInput
         label="Nome completo"
         type="text"
-        placeholder="Informe seu nome completo"
+        placeholder="Informe o nome"
         :value="filter.name.value"
         @onInput="filter.name.value = $event"
       />
@@ -30,6 +30,7 @@
         @onInput="filter.office.value = $event"
       />
       <GenericSelect
+        v-if="courses.length"
         label="Selecione o curso"
         :value="filter.course_name.value"
         :options="courses"
@@ -37,13 +38,15 @@
       />
       <GenericInput
         label="Tempo de experiência"
-        type="number"
-        placeholder="Informe o tempo de experiência"
+        type="text"
+        :formatType="'number'"
+        placeholder="Tempo de experiência em anos(s)"
         :value="filter.working_time_on_job.value"
         @onInput="filter.working_time_on_job.value = $event"
       />
       <div class="buttons">
         <GenericButton :text="'Filtrar'" :type="'submit'" :onClick="search" />
+        <GenericButton :text="'Limpar'" :type="'submit'" :onClick="clear" />
       </div>
     </form>
   </div>
@@ -101,6 +104,27 @@ export default {
     search() {
       this.$emit("search", this.filter);
     },
+    clear() {
+      this.filter = {
+        name: {
+          value: "",
+          error: "",
+        },
+        course_name: {
+          value: "",
+          error: "",
+        },
+        office: {
+          value: "",
+          error: "",
+        },
+        working_time_on_job: {
+          value: "",
+          error: "",
+        },
+      };
+      this.search();
+    },
   },
 };
 </script>
@@ -112,24 +136,24 @@ export default {
   align-items: center;
   justify-content: space-between;
   border-radius: 4px 4px 0 0;
-  border-bottom: 1px solid rgba($color: #4a63ec, $alpha: 0.3);
+  border-bottom: 1px solid rgba($color: $primary, $alpha: 0.3);
   margin-bottom: 10px;
 
   .close {
     cursor: pointer;
     display: flex;
     align-items: center;
-    color: rgb(10, 129, 197);
+    color: $primary;
 
     svg {
       width: 18px;
-      fill: rgb(10, 129, 197);
+      fill: $close;
     }
   }
 
   .text {
     font-size: 14px;
-    color: rgb(10, 129, 197);
+    color: $primary;
   }
 }
 .collaborators-filter {
@@ -137,8 +161,9 @@ export default {
   height: 100vh;
   background-color: #fff;
   transition: transform width 0.2s ease-in-out;
-  border-left: 1px solid rgb(10, 129, 197);
+  border: 1px solid $primary;
   border-right: 1px solid transparent;
+  border-radius: 4px 0 0 0;
   &.open {
     margin-left: 5px;
     width: 380px;

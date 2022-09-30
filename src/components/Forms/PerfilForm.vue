@@ -18,9 +18,10 @@
       />
       <GenericInput
         label="Idade"
-        type="number"
+        type="text"
+        formatType="number"
         placeholder="Informe sua idade"
-        :value="cYear"
+        :value="form.year.value"
         @onInput="form.year.value = $event"
       />
       <GenericInput
@@ -162,10 +163,9 @@ export default {
 </script>
 <style lang="scss" scoped>
 .perfil {
-  height: 100vh;
   padding: 15px;
   overflow-y: auto;
-  height: 91vh;
+  height: 83vh;
   align-items: center;
   background-color: #fff;
   border-radius: 0 0 4px 4px;

@@ -30,10 +30,10 @@ button {
   font-size: 1rem;
   color: #fff;
   border-radius: 4px;
-  background-color: rgba($color: rgb(10, 129, 197), $alpha: 0.7);
+  background-color: rgba($color: $primary, $alpha: 0.8);
   transition: 0.3s ease-in-out;
   &:hover {
-    background-color: rgba($color: rgb(10, 129, 197), $alpha: 1);
+    background-color: rgba($color: $primary, $alpha: 1);
   }
 }
 

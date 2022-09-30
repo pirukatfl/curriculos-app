@@ -47,8 +47,8 @@ export default {
     cursor: pointer;
     margin-left: 5px;
     outline: none;
-    border: 1px solid transparent;
-    background-color: rgba($color: #91919167, $alpha: 0.5);
+    border: 1px solid rgba($color: #91919167, $alpha: 0.5);
+    background-color: transparent;
     border-radius: 4px;
 
     &.error-input {
@@ -59,6 +59,7 @@ export default {
   .info {
     display: flex;
     align-items: center;
+    height: 48px;
     height: 10px;
     margin: 10px 5px;
     font-size: 0.8rem;

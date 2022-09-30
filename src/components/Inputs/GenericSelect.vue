@@ -45,15 +45,16 @@ export default {
 .input {
   font-size: 0.8rem;
   position: relative;
-  margin: 10px 5px;
+  margin: 10px 0px;
   height: 80px;
   max-width: 360px;
   select {
     width: 100%;
     outline: none;
-    border: 1px solid transparent;
-    background-color: rgba($color: #91919167, $alpha: 0.5);
+    border: 1px solid rgba($color: #91919167, $alpha: 0.5);
+    background-color: transparent;
     padding: 5px;
+    height: 40px;
     border-radius: 4px;
 
     &.error-input {

@@ -202,7 +202,7 @@ export default {
 <style lang="scss" scoped>
 .cursos {
   background-color: #fff;
-  height: 91vh;
+  height: 83vh;
   overflow: auto;
 }
 .buttons {

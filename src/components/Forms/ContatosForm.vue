@@ -14,8 +14,11 @@
               v-if="item.type.value"
               :label="`Informe o seu ${item.type.value}`"
               :placeholder="`Informe ${item.type.value}`"
+              :formatType="item.type.value"
               @onInput="item.value.value = $event"
+              @validationError="item.value.error = $event"
               :value="item.value.value"
+              :error="item.value.error"
             />
           </div>
           <div class="buttons" v-if="form.length > 1">
@@ -47,6 +50,7 @@ import GenericButton from "../Buttons/GenericiButton.vue";
 import GenericInput from "./../Inputs/GenericInput";
 import GenericSelect from "../Inputs/GenericSelect.vue";
 import { api } from "boot/axios";
+import { contactsTypes } from "./../../helpers/contactsTypes";
 import jwt from "vue-jwt-decode";
 
 export default {
@@ -58,7 +62,7 @@ export default {
   },
   data() {
     return {
-      types: ["Email", "Whatsapp", "Facebook", "Linkedin"],
+      types: contactsTypes,
       infoUser: jwt.decode(JSON.parse(window.localStorage.getItem("infoUser"))),
       form: [],
     };
@@ -72,6 +76,11 @@ export default {
     await this.getData();
   },
   methods: {
+    validForm() {
+      return this.form.some((item) => {
+        return item.value.error;
+      });
+    },
     async getData() {
       try {
         const {
@@ -115,17 +124,19 @@ export default {
     },
     async save() {
       try {
-        const contacts = this.form.map((item) => {
-          return {
-            user_id: this.infoUser.user.id,
-            type: item.type.value,
-            value: item.value.value,
+        if (!this.validForm()) {
+          const contacts = this.form.map((item) => {
+            return {
+              user_id: this.infoUser.user.id,
+              type: item.type.value,
+              value: item.value.value,
+            };
+          });
+          const body = {
+            contacts: contacts,
           };
-        });
-        const body = {
-          contacts: contacts,
-        };
-        await api.post("contacts", body);
+          await api.post("contacts", body);
+        }
       } catch (error) {
         console.error(error);
       }
@@ -170,7 +181,7 @@ export default {
   padding: 15px;
   display: flex;
 
-  max-height: 90vh;
+  max-height: 83vh;
   overflow-y: auto;
   align-items: center;
   background-color: #fff;

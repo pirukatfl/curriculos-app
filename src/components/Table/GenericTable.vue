@@ -196,7 +196,7 @@ table {
     tr {
       border-radius: 4px 4px 0 0;
       display: flex;
-      background-color: #fff;
+      background-color: rgb(240, 240, 240);
       th {
         text-align: left;
         height: 30px;
@@ -204,7 +204,7 @@ table {
         flex: 1;
         display: flex;
         align-items: center;
-        color: rgb(10, 129, 197);
+        color: $primary;
 
         &.favorite {
           justify-content: center;
@@ -215,7 +215,6 @@ table {
 
   tbody {
     tr {
-      // border-radius: 4px 4px 0 0;
       display: flex;
       opacity: 0.8;
       cursor: pointer;
@@ -226,7 +225,6 @@ table {
       }
       &:hover {
         background-color: rgb(10, 129, 197);
-        // background-color: rgb(216, 177, 50);
         opacity: 1;
       }
       td {

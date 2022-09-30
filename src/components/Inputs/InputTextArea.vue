@@ -33,13 +33,13 @@ export default {
   flex-direction: column;
   font-size: 0.8rem;
   position: relative;
-  margin: 10px 5px;
+  margin: 10px 0px;
   width: 100%;
   textarea {
     width: 97%;
     outline: none;
-    border: 1px solid transparent;
-    background-color: rgba($color: #91919167, $alpha: 0.5);
+    border: 1px solid rgba($color: #91919167, $alpha: 0.5);
+    background-color: transparent;
     padding: 5px;
     border-radius: 4px;
     resize: none;

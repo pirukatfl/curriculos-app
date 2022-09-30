@@ -36,6 +36,7 @@
             :value="item.office_description.value"
           />
           <GenericCheckbox
+            v-if="!item.date_out.value && item.date_in.value"
             :label="'Empresa atual?'"
             :value="item.current_job.value"
             :msgAttention="'Marque aqui se for seu emprego atual!'"
@@ -182,17 +183,28 @@ export default {
     calculateTimeInJob(dateIn, dateOut) {
       const dateInitial = new Date(dateIn);
       const dateFinal = new Date(dateOut);
-      const diffTime = Math.abs(dateFinal - dateInitial);
-      console.log("milliseconds", diffTime);
-      console.log(dateIn);
-      console.log(dateOut);
 
-      // const date1 = new Date('7/13/2010');
-      // const date2 = new Date('12/15/2010');
-      // const diffTime = Math.abs(date2 - date1);
-      // const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-      // console.log(diffTime + " milliseconds");
-      // console.log(diffDays + " days");
+      const initialYear = dateInitial.getFullYear();
+      const initialMonth = dateInitial.getMonth() + 1;
+      const initialDay = dateInitial.getDay();
+
+      const finalYear = dateFinal.getFullYear();
+      const finalMonth = dateFinal.getMonth() + 1;
+      const finalDay = dateFinal.getDay();
+
+      let res = null;
+
+      if (finalMonth >= initialMonth && finalDay >= initialDay)
+        res = finalYear - initialYear - 1;
+      else {
+        res = finalYear - initialYear;
+      }
+
+      if (res && res > -1) {
+        return res;
+      } else {
+        return 0;
+      }
     },
     async deleteExperience(index) {
       if (this.form[index].id) {
@@ -252,7 +264,7 @@ export default {
 <style lang="scss" scoped>
 .experiences {
   background-color: #fff;
-  height: 91vh;
+  height: 83vh;
   overflow: auto;
 }
 .buttons {

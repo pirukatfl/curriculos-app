@@ -9,12 +9,15 @@
         <form>
           <GenericInput
             label="Email"
-            type="text"
+            type="email"
             :value="form.login.value"
             :error="form.login.error"
+            :initValidate="firstRender"
+            formatType="email"
             placeholder="Informe seu email"
             @onInput="form.login.value = $event"
             @clearError="form.login.error = $event"
+            @validationError="form.login.error = $event"
           />
           <GenericInput
             label="Senha"
@@ -22,17 +25,21 @@
             :value="form.password.value"
             :error="form.password.error"
             placeholder="Informe sua senha"
+            formatType="password"
             @onInput="form.password.value = $event"
-            @clearError="form.password.error = $event"
+            @clearError="clearErrors"
+            @validationError="form.password.error = $event"
           />
           <GenericInput
             label="Repita sua senha"
             type="password"
             :value="form.repassword.value"
             :error="form.repassword.error"
-            placeholder="Informe sua senha"
+            placeholder="Repita sua senha"
+            formatType="password"
             @onInput="form.repassword.value = $event"
-            @clearError="form.repassword.error = $event"
+            @clearError="clearErrors"
+            @validationError="form.repassword.error = $event"
           />
           <div>
             <GenericCheckbox
@@ -77,12 +84,10 @@ const form = reactive({
   password: { value: "", error: "" },
   repassword: { value: "", error: "" },
 });
-
+let firstRender = ref(false);
 let isCnpj = ref(false);
 
 function validForm() {
-  validateEmail();
-  validatePassword();
   let control = 0;
   for (let i in form) {
     if (form[i].error.length) {
@@ -95,8 +100,15 @@ function validForm() {
     register();
   }
 }
+function clearErrors() {
+  for (let i in form) {
+    form[i].error = "";
+  }
+}
 async function register() {
   try {
+    clearErrors();
+    firstRender = true;
     const validate = validateSamePassword();
     if (validate) {
       const permission = isCnpj.value ? 2 : 3;
@@ -122,10 +134,12 @@ async function register() {
       message: "Email já cadastrado!",
     });
   } finally {
+    firstRender = false;
   }
 }
 function validateSamePassword() {
   if (form.password.value !== form.repassword.value) {
+    form.password.error = "As senhas estão diferentes!";
     form.repassword.error = "As senhas estão diferentes!";
     return false;
   }
@@ -139,23 +153,6 @@ function resetForm() {
 }
 function resetErrors(property) {
   form[property].error = "";
-}
-function validatePassword() {
-  if (form.password.value.length < 6) {
-    form.password.error = "mínimo 6 caracteres";
-    return;
-  }
-  form.login.error = "";
-  return "";
-}
-function validateEmail() {
-  const reg = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!reg.test(form.login.value)) {
-    form.login.error = "email inválido";
-    return;
-  }
-  form.login.error = "";
-  return "";
 }
 </script>
 
@@ -176,7 +173,7 @@ function validateEmail() {
     font-size: 0.8rem;
     font-weight: bold;
     color: #fff;
-    background-color: rgba(216, 69, 69, 0.8);
+    background-color: $close;
     transition: 0.2s ease-in-out;
 
     &:hover {

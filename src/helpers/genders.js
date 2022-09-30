@@ -1,1 +1,1 @@
-export const genders = ["selecione", "masculino", "feminino", "outro"];
+export const genders = ["masculino", "feminino", "outro"];

@@ -1,5 +1,4 @@
 export const educationLevels = [
-  "selecione",
   "Ensino fundamental incompleto",
   "Ensino fundamental",
   "Ensino médio incompleto",

@@ -45,9 +45,10 @@ export default {
     cursor: pointer;
     margin-left: 5px;
     outline: none;
-    border: 1px solid transparent;
-    background-color: rgba($color: #91919167, $alpha: 0.5);
+    border: 1px solid rgba($color: #91919167, $alpha: 0.5);
+    background-color: transparent;
     border-radius: 4px;
+    height: 48px;
 
     &.error-input {
       border: 1px solid red;

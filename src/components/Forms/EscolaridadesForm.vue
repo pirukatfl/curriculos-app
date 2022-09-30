@@ -99,7 +99,6 @@ export default {
         const {
           data: { data: data },
         } = await api.get(`schoolings/${this.infoUser.user.id}`);
-        console.log(data);
         if (data.length) {
           this.form = [];
           for (let schooling of data) {
@@ -158,8 +157,6 @@ export default {
         const body = {
           schoolings: schoolings,
         };
-        console.log(schoolings);
-        // return;
         await api.post("schoolings", body);
       } catch (error) {
         console.error(error);
@@ -223,7 +220,7 @@ export default {
 <style lang="scss" scoped>
 .cursos {
   background-color: #fff;
-  height: 91vh;
+  height: 83vh;
   overflow: auto;
 }
 .buttons {

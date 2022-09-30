@@ -2,29 +2,55 @@
   <div class="endereco">
     <div class="box-endereco">
       <form>
-        <GenericSelect
-          label="Selecione seu estado"
-          :value="form.state.value"
-          :options="cStates"
-          @onInput="form.state.value = $event"
-        />
-        <GenericSelect
-          v-if="form.state.value"
-          label="Selecione sua cidade"
-          :value="form.city.value"
-          :options="cCities"
-          @onInput="form.city.value = $event"
-        />
         <GenericInput
           label="CEP"
           type="text"
           placeholder="Informe o CEP"
+          formatType="zipcode"
           :value="form.zipcode.value"
+          :error="form.zipcode.error"
+          @clearError="form.zipcode.error = $event"
           @onInput="form.zipcode.value = $event"
           maxlength="4"
         />
+
+        <div v-if="errorZipcodeSearch">
+          <GenericSelect
+            label="Selecione seu estado"
+            :value="form.state.value"
+            :options="cStates"
+            @onInput="form.state.value = $event"
+          />
+        </div>
+        <div v-else>
+          <GenericInput
+            v-if="form.zipcode.value && form.zipcode.value.length === 9"
+            label="Selecione sua cidade"
+            :value="form.state.value"
+            @onInput="form.state.value = $event"
+          />
+        </div>
+
+        <div v-if="errorZipcodeSearch">
+          <GenericSelect
+            v-if="form.state.value"
+            label="Selecione sua cidade"
+            :value="form.city.value"
+            :options="cCities"
+            @onInput="form.city.value = $event"
+          />
+        </div>
+        <div v-else>
+          <GenericInput
+            v-if="form.zipcode.value && form.zipcode.value.length === 9"
+            label="Selecione sua cidade"
+            :value="form.city.value"
+            @onInput="form.city.value = $event"
+          />
+        </div>
+
         <GenericInput
-          v-if="form.zipcode.value && form.zipcode.value.length === 8"
+          v-if="form.zipcode.value && form.zipcode.value.length === 9"
           label="Bairro"
           type="text"
           placeholder="Informe o bairro"
@@ -32,7 +58,7 @@
           @onInput="form.district.value = $event"
         />
         <GenericInput
-          v-if="form.zipcode.value && form.zipcode.value.length === 8"
+          v-if="form.zipcode.value && form.zipcode.value.length === 9"
           label="Rua"
           type="text"
           placeholder="Informe a rua"
@@ -40,7 +66,7 @@
           @onInput="form.street.value = $event"
         />
         <GenericInput
-          v-if="form.zipcode.value && form.zipcode.value.length === 8"
+          v-if="form.zipcode.value && form.zipcode.value.length === 9"
           label="Número"
           type="text"
           placeholder="Informe o número"
@@ -48,7 +74,7 @@
           @onInput="form.number.value = $event"
         />
         <GenericInput
-          v-if="form.zipcode.value && form.zipcode.value.length === 8"
+          v-if="form.zipcode.value && form.zipcode.value.length === 9"
           label="Complemento"
           type="text"
           placeholder="Informe o complement"
@@ -81,6 +107,7 @@ export default {
   data() {
     return {
       infoUser: jwt.decode(JSON.parse(window.localStorage.getItem("infoUser"))),
+      errorZipcodeSearch: false,
       form: {
         state: {
           value: "",
@@ -119,13 +146,41 @@ export default {
   watch: {
     "form.zipcode.value": {
       handler(value) {
-        if (value.length === 8) {
-          console.log("consultar");
+        this.errorZipcodeSearch = false;
+        if (value.length === 9) {
+          this.getAddresses();
         }
       },
     },
   },
   methods: {
+    async getAddresses() {
+      try {
+        this.loading = true;
+        const zipcode = this.form.zipcode.value.split("-").join("");
+        fetch(`http://viacep.com.br/ws/${zipcode}/json/`)
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.erro) {
+              this.errorZipcodeSearch = true;
+              this.form.zipcode.error = "CEP inválido";
+              this.form.state.value = "";
+              this.form.city.value = "";
+              this.form.street.value = "";
+              this.form.district.value = "";
+            } else {
+              this.errorZipcodeSearch = false;
+              this.form.state.value = data.uf;
+              this.form.city.value = data.localidade;
+              this.form.street.value = data.logradouro;
+              this.form.district.value = data.bairro;
+            }
+          });
+      } catch (error) {
+      } finally {
+        this.loading = false;
+      }
+    },
     async getData() {
       try {
         const data = await api.get(`adresses/${this.infoUser.user.id}`);
@@ -165,7 +220,7 @@ export default {
       return statesAndCities.estados.map((item) => item.nome);
     },
     cCities() {
-      return this.form.state.value
+      return !this.form.zipcode.value.lenght
         ? statesAndCities.estados.find(
             (item) => item.nome === this.form.state.value
           ).cidades
@@ -179,7 +234,7 @@ export default {
   padding: 15px;
   background-color: #fff;
   border-radius: 0 0 4px 4px;
-  max-height: 91vh;
+  height: 83vh;
   overflow-y: auto;
   background-color: rgba($color: #fff, $alpha: 0.8);
 }

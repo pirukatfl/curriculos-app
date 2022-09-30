@@ -102,6 +102,7 @@ async function login() {
       ...modalInfo.modalInfo,
       show: true,
       message: "Credenciais incorretas!",
+      success: false,
     });
   } finally {
   }
@@ -151,7 +152,8 @@ window.stores = { modalInfo };
 
   .box-login {
     display: flex;
-    width: 35%;
+    // width: 35%;
+    min-width: 380px;
     height: 100%;
     align-items: center;
     justify-content: center;

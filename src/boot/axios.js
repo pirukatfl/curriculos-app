@@ -2,11 +2,11 @@ import { boot } from "quasar/wrappers";
 import axios from "axios";
 import { loadingStore } from "./../stores/loading/loadingStore";
 
-const path = process.env.DEV ? "http://127.0.0.1:8000/api" : "other";
+// console.log(process.env.API);
+// const path = process.env.API ? "http://127.0.0.1:8000/api" : "other";
 
+const api = axios.create({ baseURL: process.env.API });
 const loading = loadingStore();
-
-const api = axios.create({ baseURL: path });
 
 export default boot(({ app }) => {
   api.interceptors.request.use(

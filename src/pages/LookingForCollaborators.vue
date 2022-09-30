@@ -165,9 +165,6 @@ export default {
     },
   },
   methods: {
-    storageListener() {
-      console.log(JSON.parse(localStorage.getItem("favorites")));
-    },
     async executeSearch(value) {
       this.name = value.name.value;
       this.course_name = value.course_name.value;
@@ -178,7 +175,6 @@ export default {
     },
     detail(id) {
       window.open(`/search-collaborators/${id}`, "_blank");
-      // this.$router.push(`/search-collaborators/${id}`);
     },
     async saveFavorite(favorite) {
       const body = {
@@ -259,7 +255,6 @@ export default {
             working_time_on_job: this.working_time_on_job,
           }),
         };
-        console.log(body);
         await api.post("logs", body);
       } catch (error) {
         console.error(error);
@@ -270,11 +265,12 @@ export default {
         this.body = this.collaborators.map((item) => {
           return {
             id: item.id,
-            nome: item.profile.name || "não informado",
-            gender: item.profile.gender || "não informado",
-            year: item.profile.year
-              ? `${item.profile.year} anos`
-              : "não informado",
+            nome: (item.profile && item.profile.name) || "não informado",
+            gender: (item.profile && item.profile.gender) || "não informado",
+            year:
+              item.profile && item.profile.year
+                ? `${item.profile.year} anos`
+                : "não informado",
             // address: item.address || "não informado",
             // experiences: this.formatExperiences(item.experiences),
             // schoolings: this.formatSchoolings(item.schoolings),
@@ -327,6 +323,7 @@ export default {
 .container {
   display: flex;
   height: 100%;
+  padding-top: 15px;
 
   .space-between {
     margin-right: 10px;
@@ -336,16 +333,15 @@ export default {
     cursor: pointer;
     display: flex;
     justify-content: center;
-    height: 100vh;
+    height: 83vh;
     width: 30px;
-    box-shadow: 10px 5px 5px black !important;
-    border: 1px solid rgb(10, 129, 197);
+    border: 1px solid $primary;
     border-right: 1px solid transparent;
     border-radius: 4px 0 0 4px;
     padding: 5px;
     svg {
       width: 26px;
-      fill: rgb(10, 129, 197);
+      fill: $primary;
     }
   }
 }

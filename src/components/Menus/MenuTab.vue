@@ -33,6 +33,7 @@ export default {
   background-color: #fff;
   border-radius: 4px 4px 0 0;
   .tab {
+    user-select: none;
     cursor: pointer;
     display: flex;
     justify-content: center;
@@ -41,7 +42,7 @@ export default {
     flex: 1;
     height: 30px;
     font-size: 1rem;
-    color: rgb(10, 129, 197);
+    color: $primary;
     background-color: #fff;
     transition: 0.2s ease-in-out;
 
@@ -50,7 +51,7 @@ export default {
     }
 
     &.active {
-      border-bottom: 1px solid rgb(10, 129, 197);
+      border-bottom: 1px solid $primary;
     }
 
     &:first-child {
