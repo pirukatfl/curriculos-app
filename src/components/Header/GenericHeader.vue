@@ -14,12 +14,27 @@
   </header>
 </template>
 <script>
+import { api } from "boot/axios";
+import jwt from "vue-jwt-decode";
+
 export default {
   name: "GenericHeader",
   methods: {
-    logout() {
-      localStorage.removeItem("infoUser");
-      this.$router.push("/");
+    async logout() {
+      const token = JSON.parse(window.localStorage.getItem("infoUser"));
+      console.log(token);
+      let config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
+      try {
+        await api.get("auth/logout", config);
+        localStorage.removeItem("infoUser");
+        this.$router.push("/");
+      } catch (error) {
+        console.log(error);
+      }
     },
   },
 };

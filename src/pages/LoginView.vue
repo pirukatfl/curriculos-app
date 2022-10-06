@@ -59,6 +59,7 @@ import { api } from "boot/axios";
 import { ref, reactive, onMounted } from "vue";
 import { auth } from "./../stores/auth/authStore";
 import { modalInfoStore } from "./../stores/modalInfo/modalInfoStore";
+import jwt from "vue-jwt-decode";
 
 // const authStore = auth();
 const modalInfo = modalInfoStore();
@@ -95,9 +96,15 @@ async function login() {
         "infoUser",
         JSON.stringify(data.access_token)
       );
-      window.location.href = "/home";
+      const permissionType = jwt.decode(data.access_token);
+      console.log(permissionType);
+
+      permissionType.user.permission_id === 3
+        ? (window.location.href = "home")
+        : (window.location.href = "search-collaborators");
     }
   } catch (error) {
+    console.log(error);
     modalInfo.modalInfoAction({
       ...modalInfo.modalInfo,
       show: true,

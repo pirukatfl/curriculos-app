@@ -49,13 +49,13 @@ module.exports = configure(function (ctx) {
             API: "http://127.0.0.1:8000/api",
           }
         : {
-            API: "prod/api",
+            API: "http://127.0.0.1:8000/api",
           },
 
       vueRouterMode: "history", // available values: 'hash', 'history'
 
       // transpile: false,
-      // publicPath: '/',
+      publicPath: "/",
 
       // Add dependencies for transpiling with Babel (Array of string/regex)
       // (from node_modules, which are by default not transpiled).
