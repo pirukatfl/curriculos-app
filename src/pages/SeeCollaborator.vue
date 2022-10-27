@@ -368,6 +368,7 @@ export default {
 
     div {
       margin-right: 10px;
+      margin-bottom: 10px;
       border: 1px solid #a3a3a3;
       border-radius: 4px;
       padding-right: 3px;

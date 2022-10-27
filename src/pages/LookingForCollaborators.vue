@@ -33,6 +33,7 @@
         @openClose="filterOpenClose = $event"
         @search="executeSearch($event)"
         :courses="courses"
+        :districts="districts"
       />
     </div>
   </div>
@@ -89,6 +90,12 @@ export default {
           action: "FUNÇÂO X",
           order: "ordenacao X",
         },
+        {
+          text: "Trabalhando?",
+          value: "trabalhando",
+          action: "FUNÇÂO X",
+          order: "ordenacao X",
+        },
         // {
         //   text: "Endereço",
         //   value: "endereco",
@@ -132,6 +139,7 @@ export default {
       office: "",
       working_time_on_job: "",
       courses: [],
+      districts: [],
     };
   },
   components: {
@@ -152,6 +160,7 @@ export default {
   async created() {
     await this.getFavorites();
     await this.getCourses();
+    await this.getDistricts();
     await this.getData();
   },
   computed: {
@@ -217,10 +226,21 @@ export default {
     },
     async getCourses() {
       try {
-        const { data: data } = await api.get("all-courses");
+        const { data: data } = await api.get("courses");
         this.courses = data.data.map((item) => {
           return item.course_name;
         });
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    async getDistricts() {
+      try {
+        const { data: data } = await api.get("adresses");
+        this.districts = data.data.map((item) => {
+          return item.district;
+        });
+        console.log(this.districts);
       } catch (error) {
         console.error(error);
       }
@@ -271,6 +291,7 @@ export default {
               item.profile && item.profile.year
                 ? `${item.profile.year} anos`
                 : "não informado",
+            working: this.isWork(item.experiences),
             // address: item.address || "não informado",
             // experiences: this.formatExperiences(item.experiences),
             // schoolings: this.formatSchoolings(item.schoolings),
@@ -280,6 +301,12 @@ export default {
       } else {
         this.body = [];
       }
+    },
+    isWork(item) {
+      if (!item.length) {
+        return "Não";
+      }
+      return item.some((el) => el.current_job) ? "Sim" : "Não";
     },
     formatExperiences(values) {
       return !values.length
@@ -346,4 +373,3 @@ export default {
   }
 }
 </style>
-

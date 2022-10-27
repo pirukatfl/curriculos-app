@@ -45,13 +45,14 @@ export default {
     color: $primary;
     background-color: #fff;
     transition: 0.2s ease-in-out;
+    white-space: nowrap;
 
     &:hover {
       background-color: rgba(10, 129, 197, 0.3);
     }
 
     &.active {
-      border-bottom: 1px solid $primary;
+      border-bottom: 2px solid $primary;
     }
 
     &:first-child {

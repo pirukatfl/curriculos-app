@@ -36,6 +36,13 @@
         :options="courses"
         @onInput="filter.course_name.value = $event"
       />
+      <GenericSelect
+        v-if="districts.length"
+        label="Selecione o bairro"
+        :value="filter.district.value"
+        :options="districts"
+        @onInput="filter.district.value = $event"
+      />
       <GenericInput
         label="Tempo de experiência"
         type="text"
@@ -82,6 +89,10 @@ export default {
           value: "",
           error: "",
         },
+        district: {
+          value: "",
+          error: "",
+        },
       },
     };
   },
@@ -91,6 +102,10 @@ export default {
       default: false,
     },
     courses: {
+      type: Array,
+      default: () => [],
+    },
+    districts: {
       type: Array,
       default: () => [],
     },
@@ -119,6 +134,10 @@ export default {
           error: "",
         },
         working_time_on_job: {
+          value: "",
+          error: "",
+        },
+        district: {
           value: "",
           error: "",
         },

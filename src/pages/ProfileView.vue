@@ -20,6 +20,10 @@ import Endereco from "../components/Forms/EnderecoForm.vue";
 import Experiencias from "../components/Forms/ExperienciasForm.vue";
 import Cursos from "../components/Forms/CursosForm.vue";
 import Escolaridades from "../components/Forms/EscolaridadesForm.vue";
+import FavoriteCompanies from "../components/Forms/FavoriteCompanies.vue";
+
+import jwt from "vue-jwt-decode";
+import { api } from "boot/axios";
 
 export default {
   name: "ProfileView",
@@ -31,6 +35,7 @@ export default {
     Experiencias,
     Cursos,
     Escolaridades,
+    FavoriteCompanies,
   },
   data() {
     return {
@@ -41,6 +46,7 @@ export default {
         "Experiências",
         "Cursos",
         "Escolaridades",
+        "Empresas favoritas",
       ],
       components: [
         "Perfil",
@@ -49,9 +55,20 @@ export default {
         "Experiencias",
         "Cursos",
         "Escolaridades",
+        "FavoriteCompanies",
       ],
       selecionado: 0,
+      infoUser: jwt.decode(JSON.parse(window.localStorage.getItem("infoUser"))),
     };
+  },
+  methods: {
+    async getData() {
+      // const { data: data } = await api.get(`resumes/${this.infoUser.user.id}`);
+      // console.log(data);
+    },
+  },
+  async created() {
+    await this.getData();
   },
 };
 </script>

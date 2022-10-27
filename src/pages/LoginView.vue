@@ -41,7 +41,7 @@
         </form>
       </div>
       <div class="box-logo">
-        <h1>LogoMarca</h1>
+        <img src="./../assets/lupa.png" alt="Lupa vagas">
       </div>
     </div>
     <transition name="fade">
@@ -155,7 +155,7 @@ window.stores = { modalInfo };
   width: 100vw;
   height: 100vh;
   align-items: center;
-  background-color: rgba($color: #4a63ec, $alpha: 0.3);
+  background-color: rgba($color: #9a9a9c, $alpha: 0.6);
 
   .box-login {
     display: flex;
@@ -170,7 +170,13 @@ window.stores = { modalInfo };
   }
 
   .box-logo {
+    width: 100%;
     margin: 0 auto;
+    display: flex;
+
+    img {
+      margin: 0 auto;
+    }
   }
 }
 .buttons {
