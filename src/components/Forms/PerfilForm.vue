@@ -150,12 +150,15 @@ export default {
           // cpf_cnpj: this.form.cpf_cnpj.value,
         };
         await api.post("profiles", body);
+        await this.getData();
+        this.$emit("reload");
       } catch (error) {
         console.error(error);
       }
     },
     async saveWithFile() {
       await this.save();
+      this.$emit("reload");
       location.reload();
     },
   },

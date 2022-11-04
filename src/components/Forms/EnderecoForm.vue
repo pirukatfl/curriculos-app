@@ -11,12 +11,11 @@
           :error="form.zipcode.error"
           @clearError="form.zipcode.error = $event"
           @onInput="form.zipcode.value = $event"
-          maxlength="4"
         />
 
         <div v-if="errorZipcodeSearch">
           <GenericSelect
-            label="Selecione seu estado"
+            label="Estado"
             :value="form.state.value"
             :options="cStates"
             @onInput="form.state.value = $event"
@@ -24,17 +23,16 @@
         </div>
         <div v-else>
           <GenericInput
-            v-if="form.zipcode.value && form.zipcode.value.length === 9"
-            label="Selecione sua cidade"
+            label="Selecione seu estado"
             :value="form.state.value"
             @onInput="form.state.value = $event"
           />
         </div>
 
-        <div v-if="errorZipcodeSearch">
+        <div v-if="errorZipcodeSearch || !form.state.value">
           <GenericSelect
             v-if="form.state.value"
-            label="Selecione sua cidade"
+            label="Cidade"
             :value="form.city.value"
             :options="cCities"
             @onInput="form.city.value = $event"
@@ -42,7 +40,6 @@
         </div>
         <div v-else>
           <GenericInput
-            v-if="form.zipcode.value && form.zipcode.value.length === 9"
             label="Selecione sua cidade"
             :value="form.city.value"
             @onInput="form.city.value = $event"
@@ -50,7 +47,6 @@
         </div>
 
         <GenericInput
-          v-if="form.zipcode.value && form.zipcode.value.length === 9"
           label="Bairro"
           type="text"
           placeholder="Informe o bairro"
@@ -58,7 +54,6 @@
           @onInput="form.district.value = $event"
         />
         <GenericInput
-          v-if="form.zipcode.value && form.zipcode.value.length === 9"
           label="Rua"
           type="text"
           placeholder="Informe a rua"
@@ -66,7 +61,6 @@
           @onInput="form.street.value = $event"
         />
         <GenericInput
-          v-if="form.zipcode.value && form.zipcode.value.length === 9"
           label="Número"
           type="text"
           placeholder="Informe o número"
@@ -74,7 +68,6 @@
           @onInput="form.number.value = $event"
         />
         <GenericInput
-          v-if="form.zipcode.value && form.zipcode.value.length === 9"
           label="Complemento"
           type="text"
           placeholder="Informe o complement"
@@ -96,6 +89,7 @@ import GenericSelect from "./../Inputs/GenericSelect";
 import { statesAndCities } from "../../utils/statesAndCities.js";
 import { api } from "boot/axios";
 import jwt from "vue-jwt-decode";
+import { removeAccents } from "./../../helpers/removeAccents";
 
 export default {
   name: "EnderecoForm",
@@ -109,6 +103,10 @@ export default {
       infoUser: jwt.decode(JSON.parse(window.localStorage.getItem("infoUser"))),
       errorZipcodeSearch: false,
       form: {
+        id: {
+          value: "",
+          error: "",
+        },
         state: {
           value: "",
           error: "",
@@ -147,7 +145,7 @@ export default {
     "form.zipcode.value": {
       handler(value) {
         this.errorZipcodeSearch = false;
-        if (value.length === 9) {
+        if (value && value.length === 9) {
           this.getAddresses();
         }
       },
@@ -168,6 +166,8 @@ export default {
               this.form.city.value = "";
               this.form.street.value = "";
               this.form.district.value = "";
+              this.form.number.value = "";
+              this.form.complement.value = "";
             } else {
               this.errorZipcodeSearch = false;
               this.form.state.value = data.uf;
@@ -177,6 +177,7 @@ export default {
             }
           });
       } catch (error) {
+        console.error(error);
       } finally {
         this.loading = false;
       }
@@ -185,6 +186,7 @@ export default {
       try {
         const data = await api.get(`adresses/${this.infoUser.user.id}`);
         if (data) {
+          this.form.id.value = data.data.id;
           this.form.city.value = data.data.data.city;
           this.form.state.value = data.data.data.state;
           this.form.district.value = data.data.data.district;
@@ -208,8 +210,11 @@ export default {
           street: this.form.street.value,
           number: this.form.number.value,
           complement: this.form.complement.value,
+          slug: removeAccents(this.form.district.value).toLowerCase(),
         };
-        const { data: data } = await api.post("adresses", body);
+        await api.post("adresses", body);
+        await this.getData();
+        this.$emit("reload");
       } catch (error) {
         console.error(error);
       }

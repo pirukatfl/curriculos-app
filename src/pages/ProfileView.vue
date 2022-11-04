@@ -7,7 +7,11 @@
         @newTab="selecionado = $event"
       />
       <Transition mode="out-in" name="bounce">
-        <component :is="components[selecionado]" />
+        <component
+          :is="components[selecionado]"
+          :data="data"
+          @reload="getData"
+        />
       </Transition>
     </div>
   </div>
@@ -39,15 +43,36 @@ export default {
   },
   data() {
     return {
-      items: [
-        "Perfil",
-        "Contatos",
-        "Endereço",
-        "Experiências",
-        "Cursos",
-        "Escolaridades",
-        "Empresas favoritas",
-      ],
+      items: {
+        profile: {
+          text: "Perfil",
+          info: "",
+        },
+        contacts: {
+          text: "Contatos",
+          info: "",
+        },
+        address: {
+          text: "Endereço",
+          info: "",
+        },
+        experiences: {
+          text: "Experências",
+          info: "",
+        },
+        courses: {
+          text: "Cursos",
+          info: "",
+        },
+        schoolings: {
+          text: "Escolaridade",
+          info: "",
+        },
+        favorite_companies: {
+          text: "Empresas favoritas",
+          info: "",
+        },
+      },
       components: [
         "Perfil",
         "Contatos",
@@ -59,12 +84,67 @@ export default {
       ],
       selecionado: 0,
       infoUser: jwt.decode(JSON.parse(window.localStorage.getItem("infoUser"))),
+      data: null,
     };
   },
   methods: {
     async getData() {
-      // const { data: data } = await api.get(`resumes/${this.infoUser.user.id}`);
-      // console.log(data);
+      const { data: data } = await api.get(`resumes/${this.infoUser.user.id}`);
+      this.items.courses.info = this.hasInfoInFormArray(data.courses);
+      this.items.profile.info = this.hasInfoInFormObject(data.profile);
+      this.items.address.info = this.hasInfoInFormObject(data.address);
+      this.items.contacts.info = this.hasInfoInFormArray(data.contacts);
+      this.items.experiences.info = this.hasInfoInFormArray(data.experiences);
+      this.items.schoolings.info = this.hasInfoInFormArray(data.schoolings);
+      this.items.favorite_companies.info = this.hasInfoInFormArray(
+        data.favorite_companies
+      );
+    },
+    hasInfoInFormArray(data) {
+      let control = 0;
+      data.forEach((item) => {
+        for (let i in item) {
+          if (
+            i !== "id" &&
+            i !== "image" &&
+            i !== "email" &&
+            i !== "cpf_cnpj" &&
+            i !== "created_at" &&
+            i !== "updated_at" &&
+            i !== "slug" &&
+            i !== "user_id" &&
+            i !== "date_out" &&
+            i !== "finished"
+          ) {
+            console.log(i);
+            if (item[i]) {
+              control++;
+            }
+          }
+        }
+      });
+      console.log(control);
+      return control === 0 ? "Preencha o formulário!" : "";
+    },
+    hasInfoInFormObject(data) {
+      let control = 0;
+      for (let i in data) {
+        if (
+          i !== "id" &&
+          i !== "image" &&
+          i !== "email" &&
+          i !== "cpf_cnpj" &&
+          i !== "created_at" &&
+          i !== "updated_at" &&
+          i !== "slug" &&
+          i !== "user_id"
+        ) {
+          if (data[i]) {
+            control++;
+          }
+        }
+      }
+      return control === 0 ? "Preencha o formulário!" : "";
     },
   },
   async created() {

@@ -58,6 +58,7 @@ import GenericButton from "../Buttons/GenericiButton.vue";
 import GenericInput from "./../Inputs/GenericInput";
 import { api } from "boot/axios";
 import jwt from "vue-jwt-decode";
+import { removeAccents } from "./../../helpers/removeAccents";
 
 export default {
   name: "CursosForm",
@@ -138,27 +139,33 @@ export default {
             date_out: item.date_out.value,
             course_name: item.course_name.value,
             finished: item.finished.value,
+            slug: removeAccents(item.course_name.value).toLowerCase(),
           };
         });
         const body = {
           courses: courses,
         };
         await api.post("courses", body);
+        await this.getData();
+        this.$emit("reload");
       } catch (error) {
         console.error(error);
       }
     },
     async deleteCourse(index) {
-      if (this.form[index].id) {
+      if (this.form[index].id.value) {
         try {
           const courses = {
             id: this.form[index].id.value,
           };
+          console.log(index);
           const body = {
             courses: courses,
           };
           await api.post("courses/delete", body);
+          this.form = [];
           await this.getData();
+          this.$emit("reload");
         } catch (error) {
           console.error(error);
         }

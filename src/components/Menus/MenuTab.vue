@@ -1,28 +1,41 @@
 <template>
   <div class="menus">
-    <template v-for="(item, index) in items" :key="index">
+    <template v-for="(item, key, index) in items" :key="index">
       <div
         :class="{ active: selected === index }"
         class="tab"
         @click="$emit('newTab', index)"
       >
-        {{ item }}
+        <span>{{ item.text }}</span>
+        <span v-if="item.info">
+          <GenericWarnings :info="item.info" />
+        </span>
       </div>
     </template>
   </div>
 </template>
 <script>
+import GenericWarnings from "./../Infos/GenericWarnings.vue";
+
 export default {
   name: "MenuTab",
   props: {
     items: {
-      type: Array,
+      type: Object,
       required: true,
     },
     selected: {
       type: Number,
       required: true,
     },
+    isEmpty: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
+  },
+  components: {
+    GenericWarnings,
   },
 };
 </script>

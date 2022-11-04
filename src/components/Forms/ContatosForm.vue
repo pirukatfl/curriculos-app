@@ -136,6 +136,8 @@ export default {
             contacts: contacts,
           };
           await api.post("contacts", body);
+          await this.getData();
+          this.$emit("reload");
         }
       } catch (error) {
         console.error(error);
@@ -152,6 +154,7 @@ export default {
           };
           await api.post("contacts/delete", body);
           await this.getData();
+          this.$emit("reload");
         } catch (error) {
           console.error(error);
         }

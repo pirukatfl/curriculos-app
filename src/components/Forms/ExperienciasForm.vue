@@ -176,6 +176,8 @@ export default {
           experiences: experiences,
         };
         await api.post("experiences", body);
+        await this.getData();
+        this.$emit("reload");
       } catch (error) {
         console.log(error);
       }
@@ -216,6 +218,7 @@ export default {
             experiences: experiences,
           };
           await api.post("experiences/delete", body);
+          this.form = [];
           await this.getData();
         } catch (error) {
           console.error(error);

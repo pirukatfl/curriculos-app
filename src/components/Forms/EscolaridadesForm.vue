@@ -158,6 +158,8 @@ export default {
           schoolings: schoolings,
         };
         await api.post("schoolings", body);
+        await this.getData();
+        this.$emit("reload");
       } catch (error) {
         console.error(error);
       }
@@ -172,7 +174,9 @@ export default {
             schoolings: schoolings,
           };
           await api.post("schoolings/delete", body);
+          this.form = [];
           await this.getData();
+          this.$emit("reload");
         } catch (error) {
           console.error(error);
         }

@@ -8,6 +8,7 @@
       :placeholder="placeholder"
       min="0"
       max="1000"
+      :disabled="disabled"
       @input="$emit('onInput', $event.target.value)"
       @click="$emit('clearError')"
     />
@@ -23,11 +24,18 @@ export default {
     label: String,
     error: String,
     type: String,
-    value: [String, Number],
+    value: {
+      type: [String, Number],
+      default: "",
+    },
     placeholder: String,
     formatType: {
       type: String,
       default: "",
+    },
+    disabled: {
+      type: Boolean,
+      default: false,
     },
     initValidate: Boolean,
   },
@@ -38,6 +46,9 @@ export default {
   },
   watch: {
     value() {
+      if (!this.value) {
+        return "";
+      }
       if (this.formatType.toLowerCase() === "email") {
         const regEmail =
           /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;

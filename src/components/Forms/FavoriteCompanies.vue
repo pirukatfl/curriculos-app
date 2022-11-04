@@ -16,7 +16,7 @@
         />
       </div>
     </div>
-    <div class="favorite-list">
+    <div v-if="companies.length" class="favorite-list">
       <template v-for="(company, index) in companies" :key="index">
         <GenericTag
           :value="company.company_name"
@@ -24,6 +24,9 @@
           @delete="deleteCompany($event)"
         />
       </template>
+    </div>
+    <div class="empty-text" v-else>
+      Não há nenhuma empresa favorita no momento.
     </div>
   </div>
 </template>
@@ -33,6 +36,7 @@ import GenericButton from "src/components/Buttons/GenericiButton.vue";
 import GenericTag from "src/components/Tags/GenereicTag.vue";
 import { api } from "boot/axios";
 import jwt from "vue-jwt-decode";
+import { removeAccents } from "./../../helpers/removeAccents";
 
 export default {
   name: "FavoriteCompanies",
@@ -40,7 +44,7 @@ export default {
   data() {
     return {
       company: "",
-      companies: ["teste"],
+      companies: [],
       infoUser: jwt.decode(JSON.parse(window.localStorage.getItem("infoUser"))),
     };
   },
@@ -61,10 +65,12 @@ export default {
         const body = {
           company_name: this.company,
           user_id: this.infoUser.user.id,
+          slug: removeAccents(this.company).toLowerCase(),
         };
         await api.post("favorites-companies", body);
         this.company = "";
         this.getData();
+        this.$emit("reload");
       } catch (error) {
         console.log(error);
       }
@@ -76,6 +82,7 @@ export default {
         };
         await api.post("favorites-companies/delete", body);
         await this.getData();
+        this.$emit("reload");
       } catch (error) {
         console.error(error);
       }
